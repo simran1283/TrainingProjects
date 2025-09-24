@@ -1,7 +1,31 @@
+
+import { useNavigation } from "@react-navigation/native"
+import { useState } from "react"
 import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, Alert } from "react-native"
 import { vs, s } from "react-native-size-matters"
+import { RootStackParamList } from "../Navigations/type"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import * as SecureStore from 'expo-secure-store';
+
+type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 const LoginScreen = () => {
+
+    const navigation = useNavigation<LoginScreenNavigationProp>();
+    const [name, setName] = useState("")
+    const [password, setPassword] = useState("")
+
+
+    const saveUserDetails = async () => {
+  try {
+    await SecureStore.setItemAsync('user_details', JSON.stringify({name,password}));
+    console.log('User details stored securely');
+    navigation.navigate("Profile")
+  } catch (err) {
+    console.error('Error storing user details', err);
+  }
+};
+
     return (
         //whole screen
         <View style={styles.container}>
@@ -15,9 +39,9 @@ const LoginScreen = () => {
 
                 {/* input fields */}
                 <Text style={styles.label}>Username</Text>
-                <TextInput style={styles.input}></TextInput>
+                <TextInput style={styles.input} value={name} onChangeText={setName}></TextInput>
                 <Text style={styles.label}>Password</Text>
-                <TextInput style={styles.input} secureTextEntry></TextInput>
+                <TextInput style={styles.input} secureTextEntry value={password} onChangeText={setPassword}></TextInput>
 
                 {/* forgot password */}
                 <Text style={styles.forgotP} onPress={() => Alert.alert("Forgot Password Pressed")}>Forgot Password?</Text>
@@ -26,7 +50,8 @@ const LoginScreen = () => {
                 <TouchableOpacity
                     style={styles.loginButton}
                     activeOpacity={0.8}
-                    onPress={() => Alert.alert("Login Pressed")}
+                    // onPress={() => navigation.navigate("Profile",{userName : name})}
+                    onPress={saveUserDetails}
                 >
                     <Text style={styles.loginButtonText}>Login</Text>
                 </TouchableOpacity>
@@ -57,7 +82,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
-        marginTop: "40%"
+        marginTop: "20%"
     },
     userImage: {
         height: vs(100),
@@ -102,12 +127,13 @@ const styles = StyleSheet.create({
     },
     newuser: {
         fontSize: 15,
-        color: "#A5D6A7",
+        color: "#90A4AE",
         fontWeight: "bold"
     },
     signup: {
         alignSelf: "center",
         fontSize: 15,
-        color: "#90A4AE"
+        color: "#A5D6A7"
+
     }
 })

@@ -1,7 +1,13 @@
-import LoginScreen from './src/components/LoginScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import StackNavigation from './src/Navigations/StackNavigation';
+
 export default function App() {
+
   return (
-    <LoginScreen/>
+    <NavigationContainer>
+      <StackNavigation />
+    </NavigationContainer>
+
   );
 }
 
