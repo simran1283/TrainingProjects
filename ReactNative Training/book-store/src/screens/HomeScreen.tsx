@@ -9,17 +9,19 @@ import { Book } from "../types/Book"
 
 const HomeScreen = () => {
 
-    const [bookList, setBookList] = useState<Book[]>([])
+    const [bookList, setBookList] = useState<Book[]>([]) //manage list of books
 
-    const [modalVisible,setModalVisible] = useState(false)
+    const [modalVisible,setModalVisible] = useState(false) //manage visibility of modal
 
-    const [selectedItem,setSelectedItem] = useState<Book | null>(null)
+    const [selectedItem,setSelectedItem] = useState<Book | null>(null) //manage a particular item
 
     useEffect(() => {
+        //on mounting fetch all books
        getAllBooks()
     }, [])
 
 
+    //function to fetch all books
     const getAllBooks = ()=>{
          getListofBooks({
             onSuccess: books => setBookList(books),
@@ -27,7 +29,7 @@ const HomeScreen = () => {
         })
     }
 
-
+    //delete a particular item/book
     const onDeleteItem = (item : Book)=>{
         deleteBookbyId({
             onSuccess :  ()=> getAllBooks(),
@@ -36,26 +38,42 @@ const HomeScreen = () => {
         })
     }
 
+    //update a book
     const onEditItem = (item : Book)=>{
         setModalVisible(true)
         setSelectedItem(item)
     }
+
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Books</Text>
+            
+            {/* Rendering list of books */}
             <FlatList
             data={bookList}
             keyExtractor={(item) => item.id}
             renderItem={({item})=> 
+                
+                // book card component for each book
             <BookCard title={item.book_name} authorName = {item.name_of_author} price = {item.price_of_book}
             imageURI={item.cover} onDeleteItem={()=> onDeleteItem(item)}
-            onEditItem = {()=>onEditItem(item)}/>}></FlatList>
+            onEditItem = {()=>onEditItem(item)}/>}>
+
+
+            </FlatList>
+
+            {/* button to open modal for adding new book */}
             <AddButton onPress={()=>{
              setModalVisible(true)
              setSelectedItem(null)
              }}/>
+
+             {/* modal */}
             <Modal visible={modalVisible} animationType="slide">
+
+                {/* add book screen inside modal */}
                 <AddBookScreen onCloseIcon={()=> setModalVisible(false)} onSaveBook={()=> getAllBooks()} selectedItem ={selectedItem}/>
+
             </Modal>
         </View>
     )

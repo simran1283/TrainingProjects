@@ -63,14 +63,20 @@ const AddBookScreen: React.FC<AddBookScreenProps> = ({ onCloseIcon, onSaveBook, 
 
     return (
         <View style={styles.container}>
+
+            {/* button to close modal */}
             <TouchableOpacity style={styles.closeButton} onPress={onCloseIcon}>
                 <AntDesign name="close" size={15} color="white" />
             </TouchableOpacity>
             <Text style={styles.heading}>Book Details</Text>
+
+            {/* text input components for book details */}
             <AddTextInput placeholder={"Book Name"} value={bookName} onChangeText={setBookName} keyboardType={"default"} />
             <AddTextInput placeholder={"Author Name"} value={authorName} onChangeText={setAuthorName} keyboardType={"default"} />
             <AddTextInput placeholder={"Cover URL"} value={coverURL} onChangeText={setCoverURL} keyboardType={"default"} />
             <AddTextInput placeholder={"Book Price"} value={bookPrice} onChangeText={setBookPrice} keyboardType={"numeric"} />
+
+            {/* save button component */}
             <Button onPress={() => { !!selectedItem ? editBook() : AddNewBook() }} />
         </View>
     )
